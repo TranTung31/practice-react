@@ -2,11 +2,20 @@ import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { fetchAllUser } from "../services/UserService";
 import ReactPaginate from "react-paginate";
+import ModelAddNew from "./ModelAddNew";
 
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
+  const [isShowModelAddNew, setShowModelAddNew] = useState(false);
+  const handleClose = () => {
+    setShowModelAddNew(false);
+  };
+  const handleUpdateUsers = (user) => {
+    setListUsers([user,...listUsers]);
+  }
 
   useEffect(() => {
     // Call API
@@ -28,6 +37,17 @@ const TableUsers = (props) => {
 
   return (
     <>
+      <div className="my-3 add-new">
+        <span>
+          <b>List users: </b>
+        </span>
+        <button
+          className="btn btn-success btn-hover"
+          onClick={() => setShowModelAddNew(true)}
+        >
+          Add new user
+        </button>
+      </div>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -58,7 +78,7 @@ const TableUsers = (props) => {
         onPageChange={handlePageClick}
         pageRangeDisplayed={5}
         pageCount={totalPages}
-        previousLabel="< previous" 
+        previousLabel="< previous"
         pageClassName="page-item"
         pageLinkClassName="page-link"
         previousClassName="page-item"
@@ -69,6 +89,9 @@ const TableUsers = (props) => {
         breakLinkClassName="page-link"
         containerClassName="pagination"
         activeClassName="active"
+      />
+      <ModelAddNew show={isShowModelAddNew} handleClose={handleClose} 
+        handleUpdateUsers={handleUpdateUsers}
       />
     </>
   );
