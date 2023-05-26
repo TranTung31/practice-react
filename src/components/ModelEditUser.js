@@ -1,47 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { postCreateUser } from "../services/UserService";
 import { toast } from "react-toastify";
 
-const ModelAddNew = (props) => {
-  const { show, handleClose, handleUpdateUsers } = props;
+const ModelEditUser = (props) => {
+  const { show, handleClose, dataUserEdit } = props;
   const [name, setName] = useState("");
   const [job, setJob] = useState("");
-  
-  const handleSaveUser = async () => {
-    let res = await postCreateUser(name, job); // Đợi API trả về 
+
+  const handleConfirm = () => {
     
-    if (res && res.id && res.name && res.job) {
-      handleClose();
-      setName("");
-      setJob("");
-      toast.success("A user is created success!");
-      handleUpdateUsers({id: res.id, first_name: res.name});
-    } else {
-      handleClose();
-      setName("");
-      setJob("");
-      toast.error("Must enter name and job!");
+  };
+
+  useEffect(() => {
+    if (show) {
+      setName(dataUserEdit.first_name);
     }
-  }
+  }, [dataUserEdit]);
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add New User</Modal.Title>
+          <Modal.Title>Edit a User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="body-add-new">
             <div className="mb-3">
               <label className="form-label">Name</label>
-              <input type="text" className="form-control" 
+              <input
+                type="text"
+                className="form-control"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
               />
             </div>
             <div className="mb-3">
               <label className="form-label">Job</label>
-              <input type="text" className="form-control" 
+              <input
+                type="text"
+                className="form-control"
                 value={job}
                 onChange={(event) => setJob(event.target.value)}
               />
@@ -52,8 +50,8 @@ const ModelAddNew = (props) => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSaveUser}>
-            Save User
+          <Button variant="primary" onClick={() => handleConfirm()}>
+            Confirm
           </Button>
         </Modal.Footer>
       </Modal>
@@ -61,4 +59,4 @@ const ModelAddNew = (props) => {
   );
 };
 
-export default ModelAddNew;
+export default ModelEditUser;
