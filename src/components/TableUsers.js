@@ -46,6 +46,12 @@ const TableUsers = (props) => {
     setListUsers(cloneListUsers);
   }
 
+  const handleDeleteUserFromModel = (user) => {
+    let cloneListUsers = _.cloneDeep(listUsers);
+    cloneListUsers = cloneListUsers.filter((item) => item.id !== user.id);
+    setListUsers(cloneListUsers);
+  }
+
   useEffect(() => {
     // Call API
     getUsers();
@@ -146,6 +152,7 @@ const TableUsers = (props) => {
         show={isShowModelDelete}
         handleClose={handleClose}
         dataUserDelete={dataUserDelete}
+        handleDeleteUserFromModel={handleDeleteUserFromModel}
       />
     </>
   );
