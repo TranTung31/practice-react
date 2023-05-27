@@ -14,12 +14,11 @@ const ModelEditUser = (props) => {
     if (res) {
       handleEditUserFromModal({
         first_name: name,
-        id: dataUserEdit.id
+        id: dataUserEdit.id,
       });
       handleClose();
       toast.success("Update user success!");
     }
-
   };
 
   useEffect(() => {
@@ -30,7 +29,12 @@ const ModelEditUser = (props) => {
 
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Edit a User</Modal.Title>
         </Modal.Header>

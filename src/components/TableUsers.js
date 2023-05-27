@@ -4,19 +4,25 @@ import { fetchAllUser } from "../services/UserService";
 import ReactPaginate from "react-paginate";
 import ModelAddNew from "./ModelAddNew";
 import ModelEditUser from "./ModelEditUser";
+import ModelConfirm from "./ModelConfirm";
 import _ from "lodash";
 
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  
   const [isShowModelAddNew, setIsShowModelAddNew] = useState(false);
   const [isShowModelEdit, setIsShowModelEdit] = useState(false);
+  const [isShowModelDelete, setIsShowModelDelete] = useState(false);
+
   const [dataUserEdit, setDataUserEdit] = useState({});
+  const [dataUserDelete, setDataUserDelete] = useState({});
 
   const handleClose = () => {
     setIsShowModelAddNew(false);
     setIsShowModelEdit(false);
+    setIsShowModelDelete(false);
   };
 
   const handleUpdateUsers = (user) => {
@@ -27,6 +33,11 @@ const TableUsers = (props) => {
     setDataUserEdit(user);
     setIsShowModelEdit(true);
   };
+
+  const handleDeleteUser = (user) => {
+    setDataUserDelete(user);
+    setIsShowModelDelete(true);
+  }
 
   const handleEditUserFromModal = (user) => {
     let cloneListUsers = _.cloneDeep(listUsers);
@@ -93,7 +104,9 @@ const TableUsers = (props) => {
                     >
                       Edit
                     </button>
-                    <button className="btn btn-danger">Delete</button>
+                    <button className="btn btn-danger"
+                      onClick={() => handleDeleteUser(item)}
+                    >Delete</button>
                   </td>
                 </tr>
               );
@@ -128,6 +141,11 @@ const TableUsers = (props) => {
         handleClose={handleClose}
         dataUserEdit={dataUserEdit}
         handleEditUserFromModal={handleEditUserFromModal}
+      />
+      <ModelConfirm
+        show={isShowModelDelete}
+        handleClose={handleClose}
+        dataUserDelete={dataUserDelete}
       />
     </>
   );
