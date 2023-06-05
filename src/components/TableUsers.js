@@ -5,19 +5,23 @@ import ReactPaginate from "react-paginate";
 import ModelAddNew from "./ModelAddNew";
 import ModelEditUser from "./ModelEditUser";
 import ModelConfirm from "./ModelConfirm";
+import "./TableUsers.scss";
 import _ from "lodash";
 
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  
+
   const [isShowModelAddNew, setIsShowModelAddNew] = useState(false);
   const [isShowModelEdit, setIsShowModelEdit] = useState(false);
   const [isShowModelDelete, setIsShowModelDelete] = useState(false);
 
   const [dataUserEdit, setDataUserEdit] = useState({});
   const [dataUserDelete, setDataUserDelete] = useState({});
+
+  const [sortBy, setSortBy] = useState("asc");
+  const [sortField, setSortField] = useState("");
 
   const handleClose = () => {
     setIsShowModelAddNew(false);
@@ -37,20 +41,20 @@ const TableUsers = (props) => {
   const handleDeleteUser = (user) => {
     setDataUserDelete(user);
     setIsShowModelDelete(true);
-  }
+  };
 
   const handleEditUserFromModal = (user) => {
     let cloneListUsers = _.cloneDeep(listUsers);
     let index = listUsers.findIndex((item) => item.id === user.id);
     cloneListUsers[index].first_name = user.first_name;
     setListUsers(cloneListUsers);
-  }
+  };
 
   const handleDeleteUserFromModel = (user) => {
     let cloneListUsers = _.cloneDeep(listUsers);
     cloneListUsers = cloneListUsers.filter((item) => item.id !== user.id);
     setListUsers(cloneListUsers);
-  }
+  };
 
   useEffect(() => {
     // Call API
@@ -70,6 +74,14 @@ const TableUsers = (props) => {
     getUsers(+event.selected + 1);
   };
 
+  const handleSort = (sortBy, sortField) => {
+    setSortBy(sortBy);
+    setSortField(sortField);
+    let cloneListUsers = _.cloneDeep(listUsers);
+    cloneListUsers =  _.orderBy(cloneListUsers, [sortField], [sortBy]);
+    setListUsers(cloneListUsers);
+  }
+
   return (
     <>
       <div className="my-3 add-new">
@@ -86,9 +98,25 @@ const TableUsers = (props) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>ID</th>
+            <th>
+              <div className="sort-header">
+                <span>Id</span>
+                <div>
+                  <i className="fa-solid fa-arrow-down" onClick={() => handleSort("desc", "id")}></i>
+                  <i className="fa-solid fa-arrow-up" onClick={() => handleSort("asc", "id")}></i>
+                </div>
+              </div>
+            </th>
             <th>Email</th>
-            <th>First Name</th>
+            <th>
+              <div className="sort-header">
+                <span>First Name</span>
+                <div>
+                  <i className="fa-solid fa-arrow-down" onClick={() => handleSort("desc", "first_name")}></i>
+                  <i className="fa-solid fa-arrow-up" onClick={() => handleSort("asc", "first_name")}></i>
+                </div>
+              </div>
+            </th>
             <th>Last Name</th>
             <th>Action</th>
           </tr>
@@ -110,9 +138,12 @@ const TableUsers = (props) => {
                     >
                       Edit
                     </button>
-                    <button className="btn btn-danger"
+                    <button
+                      className="btn btn-danger"
                       onClick={() => handleDeleteUser(item)}
-                    >Delete</button>
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               );
