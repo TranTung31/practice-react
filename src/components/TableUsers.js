@@ -78,9 +78,20 @@ const TableUsers = (props) => {
     setSortBy(sortBy);
     setSortField(sortField);
     let cloneListUsers = _.cloneDeep(listUsers);
-    cloneListUsers =  _.orderBy(cloneListUsers, [sortField], [sortBy]);
+    cloneListUsers = _.orderBy(cloneListUsers, [sortField], [sortBy]);
     setListUsers(cloneListUsers);
-  }
+  };
+
+  const handleSearch = _.debounce((event) => {
+    let term = event.target.value;
+    if (term) {
+      let cloneListUsers = _.cloneDeep(listUsers);
+      cloneListUsers = cloneListUsers.filter(item => item.email.includes(term));
+      setListUsers(cloneListUsers);
+    } else {
+      getUsers(1);
+    }
+  }, 1000);
 
   return (
     <>
@@ -95,6 +106,13 @@ const TableUsers = (props) => {
           Add new user
         </button>
       </div>
+      <div className="my-3 col-4">
+        <input
+          className="form-control"
+          placeholder="Search value by email..."
+          onChange={(event) => handleSearch(event)}
+        />
+      </div>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -102,8 +120,14 @@ const TableUsers = (props) => {
               <div className="sort-header">
                 <span>Id</span>
                 <div>
-                  <i className="fa-solid fa-arrow-down" onClick={() => handleSort("desc", "id")}></i>
-                  <i className="fa-solid fa-arrow-up" onClick={() => handleSort("asc", "id")}></i>
+                  <i
+                    className="fa-solid fa-arrow-down"
+                    onClick={() => handleSort("desc", "id")}
+                  ></i>
+                  <i
+                    className="fa-solid fa-arrow-up"
+                    onClick={() => handleSort("asc", "id")}
+                  ></i>
                 </div>
               </div>
             </th>
@@ -112,8 +136,14 @@ const TableUsers = (props) => {
               <div className="sort-header">
                 <span>First Name</span>
                 <div>
-                  <i className="fa-solid fa-arrow-down" onClick={() => handleSort("desc", "first_name")}></i>
-                  <i className="fa-solid fa-arrow-up" onClick={() => handleSort("asc", "first_name")}></i>
+                  <i
+                    className="fa-solid fa-arrow-down"
+                    onClick={() => handleSort("desc", "first_name")}
+                  ></i>
+                  <i
+                    className="fa-solid fa-arrow-up"
+                    onClick={() => handleSort("asc", "first_name")}
+                  ></i>
                 </div>
               </div>
             </th>
