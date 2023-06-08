@@ -24,6 +24,8 @@ const TableUsers = (props) => {
   const [sortBy, setSortBy] = useState("asc");
   const [sortField, setSortField] = useState("");
 
+  const [dataExport, setDataExport] = useState([]);
+
   const handleClose = () => {
     setIsShowModelAddNew(false);
     setIsShowModelEdit(false);
@@ -96,12 +98,22 @@ const TableUsers = (props) => {
     }
   }, 1000);
 
-  const csvData = [
-    ["firstname", "lastname", "email"],
-    ["Ahmed", "Tomi", "ah@smthing.co.com"],
-    ["Raed", "Labes", "rl@smthing.co.com"],
-    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
-  ];
+  const getUsersExport = (event, done) => {
+    let result = [];
+    if (listUsers && listUsers.length > 0) {
+      result.push(["Id", "Email", "First name", "Last name"]);
+      listUsers.map((item, index) => {
+        let arr = [];
+        arr[0] = item.id;
+        arr[1] = item.email;
+        arr[2] = item.first_name;
+        arr[3] = item.last_name;
+        result.push(arr);
+      });
+    }
+    setDataExport(result);
+    done();
+  };
 
   return (
     <>
@@ -111,24 +123,25 @@ const TableUsers = (props) => {
         </span>
         <div className="group-btns">
           <label className="btn btn-warning" htmlFor="test">
-            <i class="fa-solid fa-file-import"></i> Import
+            <i className="fa-solid fa-file-import"></i> Import
           </label>
-          <input id="test" type="file" hidden/>
+          <input id="test" type="file" hidden />
 
           <CSVLink
-            data={csvData}
+            data={dataExport}
             filename={"users.csv"}
             className="btn btn-primary"
-            target="_blank"
+            asyncOnClick={true}
+            onClick={getUsersExport}
           >
-            <i class="fa-sharp fa-solid fa-download"></i> Export
+            <i className="fa-sharp fa-solid fa-download"></i> Export
           </CSVLink>
 
           <button
             className="btn btn-success btn-hover"
             onClick={() => setIsShowModelAddNew(true)}
           >
-            <i class="fa-solid fa-circle-plus"></i> Add user
+            <i className="fa-solid fa-circle-plus"></i> Add user
           </button>
         </div>
       </div>
