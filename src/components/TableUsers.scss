@@ -1,8 +1,18 @@
 .sort-header {
+  display: flex;
+  justify-content: space-between;
+  i {
+    padding: 0 2px;
+    cursor: pointer;
+  }
+}
+
+.add-new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .group-btns {
     display: flex;
-    justify-content: space-between;
-    i {
-        padding: 0 2px;
-        cursor: pointer;
-    }
+    gap: 5px;
+  }
 }

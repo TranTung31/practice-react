@@ -6,6 +6,7 @@ import ModelAddNew from "./ModelAddNew";
 import ModelEditUser from "./ModelEditUser";
 import ModelConfirm from "./ModelConfirm";
 import "./TableUsers.scss";
+import { CSVLink } from "react-csv";
 import _ from "lodash";
 
 const TableUsers = (props) => {
@@ -86,12 +87,21 @@ const TableUsers = (props) => {
     let term = event.target.value;
     if (term) {
       let cloneListUsers = _.cloneDeep(listUsers);
-      cloneListUsers = cloneListUsers.filter(item => item.email.includes(term));
+      cloneListUsers = cloneListUsers.filter((item) =>
+        item.email.includes(term)
+      );
       setListUsers(cloneListUsers);
     } else {
       getUsers(1);
     }
   }, 1000);
+
+  const csvData = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  ];
 
   return (
     <>
@@ -99,12 +109,28 @@ const TableUsers = (props) => {
         <span>
           <b>List users: </b>
         </span>
-        <button
-          className="btn btn-success btn-hover"
-          onClick={() => setIsShowModelAddNew(true)}
-        >
-          Add new user
-        </button>
+        <div className="group-btns">
+          <label className="btn btn-warning" htmlFor="test">
+            <i class="fa-solid fa-file-import"></i> Import
+          </label>
+          <input id="test" type="file" hidden/>
+
+          <CSVLink
+            data={csvData}
+            filename={"users.csv"}
+            className="btn btn-primary"
+            target="_blank"
+          >
+            <i class="fa-sharp fa-solid fa-download"></i> Export
+          </CSVLink>
+
+          <button
+            className="btn btn-success btn-hover"
+            onClick={() => setIsShowModelAddNew(true)}
+          >
+            <i class="fa-solid fa-circle-plus"></i> Add user
+          </button>
+        </div>
       </div>
       <div className="my-3 col-4">
         <input
