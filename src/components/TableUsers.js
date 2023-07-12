@@ -8,6 +8,8 @@ import ModelConfirm from "./ModelConfirm";
 import "./TableUsers.scss";
 import { CSVLink } from "react-csv";
 import _ from "lodash";
+import { toast } from "react-toastify";
+import Papa from "papaparse";
 
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
@@ -115,6 +117,51 @@ const TableUsers = (props) => {
     done();
   };
 
+  const handleImportCSV = (event) => {
+    if (event.target && event.target.files && event.target.files[0]) {
+      let file = event.target.files[0];
+      if (file.type !== "text/csv") {
+        toast.error("Only upload file type CSV!");
+        return;
+      }
+      Papa.parse(file, {
+        complete: function (results) {
+          let rawData = results.data;
+          if (rawData.length > 0) {
+            if (rawData[0] && rawData[0].length === 3) {
+              if (
+                rawData[0][0] !== "email" ||
+                rawData[0][1] !== "first_name" ||
+                rawData[0][2] !== "last_name"
+              ) {
+                toast.error("Error format header CSV!");
+                return;
+              } else {
+                const result = [];
+                rawData.map((item, index) => {
+                  if (index > 0 && item.length === 3) {
+                    let obj = {};
+                    obj.email = item[0];
+                    obj.first_name = item[1];
+                    obj.last_name = item[2];
+                    result.push(obj);
+                  }
+                });
+                setListUsers(result);
+              }
+            } else {
+              toast.error("Wrong format on CSV file!");
+              return;
+            }
+          } else {
+            toast.error("Not found data on CSV file!");
+            return;
+          }
+        },
+      });
+    }
+  };
+
   return (
     <>
       <div className="my-3 add-new">
@@ -125,7 +172,12 @@ const TableUsers = (props) => {
           <label className="btn btn-warning" htmlFor="test">
             <i className="fa-solid fa-file-import"></i> Import
           </label>
-          <input id="test" type="file" hidden />
+          <input
+            id="test"
+            type="file"
+            hidden
+            onChange={(event) => handleImportCSV(event)}
+          />
 
           <CSVLink
             data={dataExport}
