@@ -19,11 +19,15 @@ const Header = (props) => {
     toast.success("Logout successfull!");
   };
 
+  const handleHome = () => {
+    navigate("/");
+  };
+
   return (
     <>
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand href="/">
+          <Navbar.Brand onClick={() => handleHome()} style={{cursor: "pointer"}}>
             <img
               src={logoApp}
               width="30"

@@ -21,7 +21,7 @@ const Login = () => {
     }
 
     setLoadingApi(true);
-    let res = await loginApi(email, password);
+    let res = await loginApi(email.trim(), password);
     if (res && res.token) {
       loginContext(email, res.token);
       navigate("/");
@@ -31,6 +31,12 @@ const Login = () => {
       }
     }
     setLoadingApi(false);
+  };
+
+  const handleEnter = (event) => {
+    if (event && event.key === "Enter") {
+      handleLogin();
+    }
   };
 
   const handleGoBack = () => {
@@ -54,6 +60,7 @@ const Login = () => {
             placeholder="Password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            onKeyDown={(event) => handleEnter(event)}
           />
           <i
             className={
@@ -74,7 +81,9 @@ const Login = () => {
         </button>
         <div className="back">
           <i className="fa-solid fa-chevron-left"></i>
-          <span onClick={() => handleGoBack()} style={{cursor: "pointer"}}>&nbsp;Go back</span>
+          <span onClick={() => handleGoBack()} style={{ cursor: "pointer" }}>
+            &nbsp;Go back
+          </span>
         </div>
       </div>
     </>
