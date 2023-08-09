@@ -5,19 +5,26 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import logoApp from "../assets/images/logo192.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+import { useSelector, useDispatch } from "react-redux";
+import { handleLogoutRedux } from "../redux/actions/userAction";
+import { useEffect } from "react";
 
 const Header = (props) => {
   const navigate = useNavigate();
 
-  const { user, logout } = useContext(UserContext);
+  const user = useSelector((state) => state.user.account);
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    logout();
-    navigate("/");
-    toast.success("Logout successfull!");
+    dispatch(handleLogoutRedux());
   };
+
+  useEffect(() => {
+    if (user && user.auth === false && window.location.pathname !== "/login") {
+      navigate("/");
+      toast.success("Log out successfull!");
+    }
+  }, [user]);
 
   const handleHome = () => {
     navigate("/");
@@ -27,7 +34,10 @@ const Header = (props) => {
     <>
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand onClick={() => handleHome()} style={{cursor: "pointer"}}>
+          <Navbar.Brand
+            onClick={() => handleHome()}
+            style={{ cursor: "pointer" }}
+          >
             <img
               src={logoApp}
               width="30"
