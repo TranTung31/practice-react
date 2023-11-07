@@ -24,7 +24,7 @@ const Home = () => {
         <span>Tự do tùy chỉnh html, css để có một website đẹp.</span>
         <br />
         <span>Commit và đẩy sources code lên github public.</span>
-        <br />
+        {/* <br />
         <span>Triển khai website lên Heroku để demo.</span>
         <br />
         <br />
@@ -34,7 +34,7 @@ const Home = () => {
         <span>
           Sử dụng python django rest framework, tạo các API như trên trang web:
           https://reqres.in
-        </span>
+        </span> */}
       </div>
     </>
   );
